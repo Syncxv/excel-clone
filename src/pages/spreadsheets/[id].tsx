@@ -1,21 +1,30 @@
 import { NextPage } from 'next'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { CellClass } from '../../classes/Cell'
 import { FunctionalComponent } from '../../types'
 export type Column = { letter: string; cells: CellClass[] }
-export const Cell: FunctionalComponent = ({ children }) => (
-    <div className="cell w-24 h-5 border-gray-800 border-opacity-50 border">{children}</div>
+export const Cell: FunctionalComponent<{ className?: string }> = ({ children, className = '' }) => (
+    <div className={`cell w-24 h-5 border-gray-800 border-opacity-50 border ${className}`}>{children}</div>
 )
 
 const Spreadsheet: NextPage = () => {
-    useEffect(() => {
-        console.log(createNewGrid())
-    }, [])
+    const [grid, setGrid] = useState(createNewGrid())
     return (
         <div className="flex flex-col items-center h-screen">
-            <div className="w-full h-28 bg-gray-500"></div>
+            <div className="w-full h-28 "></div>
             <div className="w-full h-full bg-gray-300">
-                <div className="cells"></div>
+                <div className="headThingy"></div>
+                <div className="cells flex">
+                    {grid.map(col => (
+                        <div className={`${col.letter}`}>
+                            <Cell>{col.letter}</Cell>
+                            <div className="border-t border-gray-800 border-opacity-30"></div>
+                            {col.cells.map(_cell => (
+                                <Cell></Cell>
+                            ))}
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     )
