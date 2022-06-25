@@ -9,7 +9,9 @@ export const Cell: FunctionalComponent<{ className?: string }> = ({ children, cl
 
 const ColumnComponent: FunctionalComponent<{ col: Column }> = ({ col }) => (
     <div key={col.letter} className={`${col.letter}`}>
-        <Cell className="flex items-center justify-center text-center bg-gray-300 font-semibold">{col.letter}</Cell>
+        <Cell className="flex items-center justify-center text-center bg-gray-200 text-gray-600 font-light">
+            {col.letter}
+        </Cell>
         {/* <div className="border-t border-gray-800 border-opacity-30"></div> */}
         {col.cells.map(cell => (
             <Cell key={cell.rowIndex}></Cell>
@@ -31,7 +33,7 @@ const Spreadsheet: NextPage = () => {
                                 <div className="flex flex-col">
                                     <Cell className="w-14"></Cell>
                                     {col.cells.map(cell => (
-                                        <Cell className="flex items-center justify-center text-center bg-gray-300 w-14">
+                                        <Cell className="flex items-center justify-center text-center bg-gray-200 text-gray-600 w-14">
                                             {cell.rowIndex}{' '}
                                         </Cell>
                                     ))}
