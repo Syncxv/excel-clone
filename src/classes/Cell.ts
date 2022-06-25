@@ -35,14 +35,22 @@ export class CellClass {
 
     onDragStart(e: DragEvent) {
         // e.preventDefault()
+        // e.stopPropagation()
+        //WJY MNA WHY DOES IT NOT WORK WHEN I DO THAT FUCK
         setEmptyImage(e)
         unSelectAll()
-        this.select()
+        this.select(true)
         console.log(this)
     }
 
     onDragOver(e: DragEvent) {
         console.log('DRAGING OVER')
+        const selected = sheetStore
+            .getState()
+            .grid.map(c => c.cells)
+            .flat()
+            .find(s => s.selected.isPrimary)
+        console.log(selected)
         this.select()
     }
     select(isPrimary: boolean = false) {
