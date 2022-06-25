@@ -4,7 +4,7 @@ import { CellClass } from '../../classes/Cell'
 import { FunctionalComponent } from '../../types'
 export type Column = { letter: string; cells: CellClass[] }
 export const Cell: FunctionalComponent<{ className?: string; id: string }> = ({ children, className = '', id }) => (
-    <div id={id} className={`cell w-24 h-5 border-gray-800 border-opacity-50 border ${className}`}>
+    <div id={id} className={`cell select-none w-24 h-5 border-gray-800 border-opacity-50 border ${className}`}>
         {children}
     </div>
 )
