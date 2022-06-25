@@ -12,15 +12,15 @@ const Spreadsheet: NextPage = () => {
     return (
         <div className="flex flex-col items-center h-screen">
             <div className="w-full h-28 "></div>
-            <div className="w-full h-full bg-gray-300">
+            <div className="w-full h-full bg-gray-300 overflow-auto">
                 <div className="headThingy"></div>
                 <div className="cells flex">
                     {grid.map(col => (
-                        <div className={`${col.letter}`}>
+                        <div key={col.letter} className={`${col.letter}`}>
                             <Cell>{col.letter}</Cell>
                             <div className="border-t border-gray-800 border-opacity-30"></div>
-                            {col.cells.map(_cell => (
-                                <Cell></Cell>
+                            {col.cells.map(cell => (
+                                <Cell key={cell.rowIndex}></Cell>
                             ))}
                         </div>
                     ))}
