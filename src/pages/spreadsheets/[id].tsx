@@ -1,6 +1,7 @@
 import { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 import { CellClass } from '../../classes/Cell'
+import { sheetStore } from '../../store/sheet'
 import { FunctionalComponent } from '../../types'
 export type Column = { letter: string; cells: CellClass[] }
 export const Cell: FunctionalComponent<{ className?: string; id: string }> = ({ children, className = '', id }) => (
@@ -25,9 +26,9 @@ const ColumnComponent: FunctionalComponent<{ col: Column }> = ({ col }) => (
 )
 
 const Spreadsheet: NextPage = () => {
-    const [grid, setGrid] = useState<Column[]>([])
+    const { grid, createNewGrid } = sheetStore()
     useEffect(() => {
-        setGrid(createNewGrid())
+        createNewGrid()
     }, [])
     useEffect(() => {
         console.log(grid)
@@ -64,7 +65,7 @@ const Spreadsheet: NextPage = () => {
     )
 }
 
-const createNewGrid = () => {
+export const createNewGrid = () => {
     let fucky: Column[] = []
     for (let i = 65; i < 91; ++i) {
         const colLetter = String.fromCharCode(i)
