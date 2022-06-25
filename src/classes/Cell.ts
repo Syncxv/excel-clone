@@ -19,6 +19,7 @@ export class CellClass {
 
     async initalize() {
         if (this.bruhTarget == null) await sleep(20)
+        Object.assign(this.bruhTarget!, { cell: this })
         this.bruhTarget!.addEventListener('click', this.onClick)
     }
 
@@ -27,6 +28,11 @@ export class CellClass {
         this.selected = { isPrimary: true, isSelected: true }
         this.bruhTarget?.classList.add('selected-primary')
     }
+
+    onDragStart() {
+        console.log(this)
+    }
+
     unSelectCurrent() {
         this.selected = { isPrimary: false, isSelected: false }
         this.bruhTarget?.classList.remove('selected-primary')
