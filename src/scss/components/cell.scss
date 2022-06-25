@@ -1,0 +1,15 @@
+.cell {
+    &.selected-primary {
+        border: solid 2px blue;
+        &::before {
+            content: '';
+            position: absolute;
+            height: 12px;
+            width: 12px;
+            background-color: blue;
+            bottom: -4px;
+            right: -4px;
+            border: solid 1px white;
+        }
+    }
+}

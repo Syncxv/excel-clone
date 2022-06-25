@@ -23,7 +23,7 @@ export class CellClass {
 
     onClick() {
         this.selected = { isPrimary: true, selected: true }
-        this.bruhTarget?.classList.add('selected')
+        this.bruhTarget?.classList.add('selected-primary')
         console.log(this, this.selected)
     }
 }
