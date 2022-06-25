@@ -3,24 +3,35 @@ import { useEffect, useState } from 'react'
 import { CellClass } from '../../classes/Cell'
 import { FunctionalComponent } from '../../types'
 export type Column = { letter: string; cells: CellClass[] }
-export const Cell: FunctionalComponent<{ className?: string }> = ({ children, className = '' }) => (
-    <div className={`cell w-24 h-5 border-gray-800 border-opacity-50 border ${className}`}>{children}</div>
+export const Cell: FunctionalComponent<{ className?: string; id: string }> = ({ children, className = '', id }) => (
+    <div id={id} className={`cell w-24 h-5 border-gray-800 border-opacity-50 border ${className}`}>
+        {children}
+    </div>
 )
 
 const ColumnComponent: FunctionalComponent<{ col: Column }> = ({ col }) => (
     <div key={col.letter} className={`${col.letter}`}>
-        <Cell className="flex items-center justify-center text-center bg-gray-200 text-gray-600 font-light">
+        <Cell
+            id={getId(col)}
+            className="flex items-center justify-center text-center bg-gray-200 text-gray-600 font-light"
+        >
             {col.letter}
         </Cell>
         {/* <div className="border-t border-gray-800 border-opacity-30"></div> */}
         {col.cells.map(cell => (
-            <Cell key={cell.rowIndex}></Cell>
+            <Cell id={getId(cell)} key={cell.rowIndex}></Cell>
         ))}
     </div>
 )
 
 const Spreadsheet: NextPage = () => {
-    const [grid, setGrid] = useState(createNewGrid())
+    const [grid, setGrid] = useState<Column[]>([])
+    useEffect(() => {
+        setGrid(createNewGrid())
+    }, [])
+    useEffect(() => {
+        console.log(grid)
+    }, [grid])
     return (
         <div className="flex flex-col items-center h-screen">
             <div className="w-full h-28 "></div>
@@ -31,10 +42,13 @@ const Spreadsheet: NextPage = () => {
                         col.letter === 'A' ? (
                             <div className="flex">
                                 <div className="flex flex-col">
-                                    <Cell className="w-14"></Cell>
+                                    <Cell id="empty" className="w-14"></Cell>
                                     {col.cells.map(cell => (
-                                        <Cell className="flex items-center justify-center text-center bg-gray-200 text-gray-600 w-14">
-                                            {cell.rowIndex}{' '}
+                                        <Cell
+                                            id={getId(cell, 'side-number-thingy')}
+                                            className="flex items-center justify-center text-center bg-gray-200 text-gray-600 w-14"
+                                        >
+                                            {cell.rowIndex}
                                         </Cell>
                                     ))}
                                 </div>
@@ -62,6 +76,13 @@ const createNewGrid = () => {
         fucky.push(bruh)
     }
     return fucky
+}
+
+export const getId = (item: Column | CellClass, prefix: string = ''): string => {
+    if (item instanceof CellClass) {
+        return `${prefix}col-${item.columnLetter}-cell-${item.rowIndex}`
+    }
+    return `${prefix}col-${item.letter}`
 }
 
 export default Spreadsheet
