@@ -1,5 +1,6 @@
 import { getId } from '../pages/spreadsheets/[id]'
 import { sheetStore } from '../store/sheet'
+import { setEmptyImage } from '../util/setEmptyImage'
 import { sleep } from '../util/sleep'
 
 export class CellClass {
@@ -11,6 +12,8 @@ export class CellClass {
         this.rowIndex = rowIndex
         this.selected = { isPrimary: false, isSelected: false }
         this.onClick = this.onClick.bind(this)
+        this.onDragStart = this.onDragStart.bind(this)
+        this.onDragOver = this.onDragOver.bind(this)
         this.initalize()
     }
     get bruhTarget() {
@@ -21,21 +24,34 @@ export class CellClass {
         if (this.bruhTarget == null) await sleep(20)
         Object.assign(this.bruhTarget!, { cell: this })
         this.bruhTarget!.addEventListener('click', this.onClick)
+        this.bruhTarget!.addEventListener('dragstart', this.onDragStart)
+        this.bruhTarget!.addEventListener('dragover', this.onDragOver)
     }
 
     onClick() {
         unSelectAll()
-        this.selected = { isPrimary: true, isSelected: true }
-        this.bruhTarget?.classList.add('selected-primary')
+        this.select(true)
     }
 
-    onDragStart() {
+    onDragStart(e: DragEvent) {
+        // e.preventDefault()
+        setEmptyImage(e)
+        unSelectAll()
+        this.select()
         console.log(this)
     }
 
-    unSelectCurrent() {
+    onDragOver(e: DragEvent) {
+        console.log('DRAGING OVER')
+        this.select()
+    }
+    select(isPrimary: boolean = false) {
+        this.selected = { isPrimary, isSelected: true }
+        this.bruhTarget?.classList.add(`selected${isPrimary ? '-primary' : ''}`)
+    }
+    unSelect() {
         this.selected = { isPrimary: false, isSelected: false }
-        this.bruhTarget?.classList.remove('selected-primary')
+        this.bruhTarget?.classList.remove('selected-primary', 'selected')
         console.log(this, this.bruhTarget)
     }
 }
@@ -46,4 +62,4 @@ export const unSelectAll = () =>
         .grid.map(s => s.cells)
         .flat()
         .filter(s => s.selected.isSelected)
-        .forEach(s => s.unSelectCurrent())
+        .forEach(s => s.unSelect())

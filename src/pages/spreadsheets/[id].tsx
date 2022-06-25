@@ -5,7 +5,11 @@ import { sheetStore } from '../../store/sheet'
 import { FunctionalComponent } from '../../types'
 export type Column = { letter: string; cells: CellClass[] }
 export const Cell: FunctionalComponent<{ className?: string; id: string }> = ({ children, className = '', id }) => (
-    <div id={id} className={`cell relative select-none w-24 h-5 border-gray-800 border-opacity-20 border ${className}`}>
+    <div
+        id={id}
+        draggable={true}
+        className={`cell relative select-none w-24 h-5 border-gray-800 border-opacity-20 border ${className}`}
+    >
         {children}
     </div>
 )
