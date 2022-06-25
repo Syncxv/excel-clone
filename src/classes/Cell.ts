@@ -1,14 +1,15 @@
 import { getId } from '../pages/spreadsheets/[id]'
+import { sheetStore } from '../store/sheet'
 import { sleep } from '../util/sleep'
 
 export class CellClass {
     columnLetter: string
     rowIndex: number
-    selected: { isPrimary: boolean; selected: boolean }
+    selected: { isPrimary: boolean; isSelected: boolean }
     constructor(columnLetter: string, rowIndex: number) {
         this.columnLetter = columnLetter
         this.rowIndex = rowIndex
-        this.selected = { isPrimary: false, selected: false }
+        this.selected = { isPrimary: false, isSelected: false }
         this.onClick = this.onClick.bind(this)
         this.initalize()
     }
@@ -22,8 +23,21 @@ export class CellClass {
     }
 
     onClick() {
-        this.selected = { isPrimary: true, selected: true }
+        unSelectAll()
+        this.selected = { isPrimary: true, isSelected: true }
         this.bruhTarget?.classList.add('selected-primary')
-        console.log(this, this.selected)
+    }
+    unSelectCurrent() {
+        this.selected = { isPrimary: false, isSelected: false }
+        this.bruhTarget?.classList.remove('selected-primary')
+        console.log(this, this.bruhTarget)
     }
 }
+
+export const unSelectAll = () =>
+    sheetStore
+        .getState()
+        .grid.map(s => s.cells)
+        .flat()
+        .filter(s => s.selected.isSelected)
+        .forEach(s => s.unSelectCurrent())
