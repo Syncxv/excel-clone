@@ -39,8 +39,8 @@ export class CellClass {
         this.rowIndex = rowIndex
         this.ctx = ctx
         this.selected = { isPrimary: false, isSelected: false }
-        this.height = 10
-        this.width = 40
+        this.height = 20
+        this.width = 60
         this.onClick = this.onClick.bind(this)
         this.initalize()
     }

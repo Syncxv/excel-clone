@@ -10,11 +10,11 @@ export class SheetManager {
 
     initalize() {
         this.canvas = document.getElementById('sheet') as HTMLCanvasElement
-        this.canvas.width = this.canvas.offsetWidth
-        this.canvas.height = this.canvas.offsetHeight
         this.ctx = this.canvas.getContext('2d')!
-        this.frame = requestAnimationFrame(this.sheetLoop.bind(this))
         this.grid = this.newSheetGrid()
+        this.canvas.width = this.grid.reduce((prev, curr) => prev + curr.cells[0].width, 0)
+        this.canvas.height = this.grid[0].cells.reduce((prev, curr) => prev + curr.height, 0)
+        this.frame = requestAnimationFrame(this.sheetLoop.bind(this))
     }
 
     sheetLoop() {
