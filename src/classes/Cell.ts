@@ -55,6 +55,10 @@ export class CellClass {
         const { ctx } = this
         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
         ctx.beginPath()
+        if (this.selected.isPrimary) {
+            ctx.strokeStyle = 'blue'
+            ctx.lineWidth = 2
+        } else ctx.strokeStyle = 'black'
         ctx.rect(this.x, this.y, this.width, this.height)
         ctx.stroke()
     }

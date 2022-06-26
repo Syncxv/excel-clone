@@ -60,7 +60,8 @@ export class SheetManager {
         console.log(this.pos)
         const { pos } = this
         const cells = this.getCells()
-        const cell = cells.find(cell => pos.x < cell.x + cell.width && cell.x + cell.width > pos.x)
+        const cell = cells.find(cell => pos.x < cell.x + cell.width && pos.y < cell.y + cell.height)
         console.log(cell)
+        if (cell) cell.select(true)
     }
 }
