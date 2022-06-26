@@ -41,13 +41,20 @@ export class SheetManager {
             this.ctx.strokeStyle = 'black'
             this.ctx.lineWidth = 1
             this.ctx.fillStyle = '#62A1FF'
-            this.canvasAPI.rect(
+            this.ctx.fillRect(
                 primarySelected.x + primarySelected.width - primarySelected.boxBottomOffset,
                 primarySelected.y + primarySelected.height - primarySelected.boxBottomOffset,
                 10,
                 10
             )
-            this.canvasAPI.fill()
+            this.ctx.strokeStyle = 'white'
+            this.ctx.lineWidth = 1
+            this.ctx.strokeRect(
+                primarySelected.x + primarySelected.width - primarySelected.boxBottomOffset,
+                primarySelected.y + primarySelected.height - primarySelected.boxBottomOffset,
+                10,
+                10
+            )
         }
     }
     newSheetGrid() {

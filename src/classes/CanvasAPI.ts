@@ -25,7 +25,7 @@ export class CanvasAPI {
         this.ctx.fillRect(x, y, width, height)
 
         this.ctx.strokeStyle = selected.isPrimary ? '#62A1FF' : '#7C7C7C'
-        this.ctx.lineWidth = 1
+        this.ctx.lineWidth = selected.isPrimary ? 3 : 1
         this.ctx.strokeRect(x, y, width, height)
     }
 }
