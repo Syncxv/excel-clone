@@ -34,6 +34,8 @@ export class CellClass {
     height: number
     ctx: CanvasRenderingContext2D
     width: number
+    x: number
+    y: number
     constructor(columnLetter: string, rowIndex: number, ctx: CanvasRenderingContext2D) {
         this.columnLetter = columnLetter
         this.rowIndex = rowIndex
@@ -41,6 +43,8 @@ export class CellClass {
         this.selected = { isPrimary: false, isSelected: false }
         this.height = 20
         this.width = 60
+        this.x = letterMap[this.columnLetter] * this.width
+        this.y = this.rowIndex * this.height
         this.onClick = this.onClick.bind(this)
         this.initalize()
     }
@@ -49,8 +53,9 @@ export class CellClass {
 
     draw() {
         const { ctx } = this
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
         ctx.beginPath()
-        ctx.rect(letterMap[this.columnLetter] * this.width, this.rowIndex * this.height, this.width, this.height)
+        ctx.rect(this.x, this.y, this.width, this.height)
         ctx.stroke()
     }
 
