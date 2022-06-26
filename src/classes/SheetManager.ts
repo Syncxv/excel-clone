@@ -13,6 +13,7 @@ export class SheetManager {
         y: 0
     }
     canvasAPI!: CanvasAPI
+    startingCell!: CellClass
     initalize() {
         this.canvas = document.getElementById('sheet') as HTMLCanvasElement
         this.ctx = this.canvas.getContext('2d')!
@@ -23,7 +24,8 @@ export class SheetManager {
         this.canvasAPI = new CanvasAPI(this.ctx)
         this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
         this.canvas.addEventListener('mouseout', this.onMouseOut.bind(this))
-        this.canvas.addEventListener('click', this.onClick.bind(this))
+        this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
+        this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this))
         this.frame = requestAnimationFrame(this.sheetLoop.bind(this))
     }
     getCells() {
@@ -36,6 +38,9 @@ export class SheetManager {
             .map(s => s.cells)
             .flat()
             .forEach(s => s.draw(this.canvasAPI))
+        this.renderPrimaryBoxThigy()
+    }
+    renderPrimaryBoxThigy() {
         const primarySelected = this.getCells().find(s => s.selected.isPrimary)
         if (primarySelected) {
             this.ctx.strokeStyle = 'black'
@@ -70,7 +75,19 @@ export class SheetManager {
         }
         return fucky
     }
+    onMouseDown() {
+        this.startingCell = this.getCells().find(
+            cell => this.pos.x < cell.x + cell.width && this.pos.y < cell.y + cell.height
+        )!
+    }
 
+    onMouseUp() {
+        const cell = this.getCells().find(
+            cell => this.pos.x < cell.x + cell.width && this.pos.y < cell.y + cell.height
+        )!
+        if (this.startingCell === cell) return cell.onClick()
+        console.log({ startingCell: this.startingCell, cell })
+    }
     onMouseMove(e: MouseEvent) {
         const rect = (e.target as HTMLCanvasElement).getBoundingClientRect()
         this.pos.x = e.clientX - rect.left
