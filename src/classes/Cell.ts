@@ -1,5 +1,4 @@
 import { getId } from '../pages/spreadsheets/[id]'
-import { sheetStore } from '../store/sheet'
 import { setEmptyImage } from '../util/setEmptyImage'
 import { sleep } from '../util/sleep'
 
@@ -13,7 +12,7 @@ export class CellClass {
         this.selected = { isPrimary: false, isSelected: false }
         this.onClick = this.onClick.bind(this)
         this.onDragStart = this.onDragStart.bind(this)
-        this.onDragOver = this.onDragOver.bind(this)
+        // this.onDragOver = this.onDragOver.bind(this)
         this.initalize()
     }
     get bruhTarget() {
@@ -21,11 +20,11 @@ export class CellClass {
     }
 
     async initalize() {
-        if (this.bruhTarget == null) await sleep(20)
-        Object.assign(this.bruhTarget!, { cell: this })
-        this.bruhTarget!.addEventListener('click', this.onClick)
-        this.bruhTarget!.addEventListener('dragstart', this.onDragStart)
-        this.bruhTarget!.addEventListener('dragover', this.onDragOver)
+        // if (this.bruhTarget == null) await sleep(20)
+        // Object.assign(this.bruhTarget!, { cell: this })
+        // this.bruhTarget!.addEventListener('click', this.onClick)
+        // this.bruhTarget!.addEventListener('dragstart', this.onDragStart)
+        // this.bruhTarget!.addEventListener('dragover', this.onDragOver)
     }
 
     onClick() {
@@ -43,16 +42,6 @@ export class CellClass {
         console.log(this)
     }
 
-    onDragOver(e: DragEvent) {
-        console.log('DRAGING OVER')
-        const selected = sheetStore
-            .getState()
-            .grid.map(c => c.cells)
-            .flat()
-            .find(s => s.selected.isPrimary)
-        console.log(selected)
-        this.select()
-    }
     select(isPrimary: boolean = false) {
         this.selected = { isPrimary, isSelected: true }
         this.bruhTarget?.classList.add(`selected${isPrimary ? '-primary' : ''}`)
@@ -64,10 +53,9 @@ export class CellClass {
     }
 }
 
-export const unSelectAll = () =>
-    sheetStore
-        .getState()
-        .grid.map(s => s.cells)
-        .flat()
-        .filter(s => s.selected.isSelected)
-        .forEach(s => s.unSelect())
+export const unSelectAll = () => {}
+// sheetManager.grid
+//     .map(s => s.cells)
+//     .flat()
+//     .filter(s => s.selected.isSelected)
+//     .forEach(s => s.unSelect())
