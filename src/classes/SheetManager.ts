@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic'
+import { CanvasAPI } from './CanvasAPI'
 import { CellClass } from './Cell'
 export type Column = { letter: string; cells: CellClass[] }
 
@@ -11,13 +12,15 @@ export class SheetManager {
         x: 0,
         y: 0
     }
-
+    canvasAPI!: CanvasAPI
     initalize() {
         this.canvas = document.getElementById('sheet') as HTMLCanvasElement
         this.ctx = this.canvas.getContext('2d')!
         this.grid = this.newSheetGrid()
-        this.canvas.width = this.grid.reduce((prev, curr) => prev + curr.cells[0].width, 0)
-        this.canvas.height = this.grid[0].cells.reduce((prev, curr) => prev + curr.height, 0)
+        this.canvas.width =
+            this.grid.reduce((prev, curr) => prev + curr.cells[0].width + curr.cells[0].strokeWidth, 0) + 1
+        this.canvas.height = this.grid[0].cells.reduce((prev, curr) => prev + curr.height + curr.strokeWidth, 0) + 1
+        this.canvasAPI = new CanvasAPI(this.ctx)
         this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
         this.canvas.addEventListener('mouseout', this.onMouseOut.bind(this))
         this.canvas.addEventListener('click', this.onClick.bind(this))
@@ -28,10 +31,24 @@ export class SheetManager {
     }
     sheetLoop() {
         this.frame = requestAnimationFrame(this.sheetLoop.bind(this))
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
         this.grid
             .map(s => s.cells)
             .flat()
-            .forEach(s => s.draw())
+            .forEach(s => s.draw(this.canvasAPI))
+        const primarySelected = this.getCells().find(s => s.selected.isPrimary)
+        if (primarySelected) {
+            this.ctx.strokeStyle = 'black'
+            this.ctx.lineWidth = 1
+            this.ctx.fillStyle = '#62A1FF'
+            this.canvasAPI.rect(
+                primarySelected.x + primarySelected.width - primarySelected.boxBottomOffset,
+                primarySelected.y + primarySelected.height - primarySelected.boxBottomOffset,
+                10,
+                10
+            )
+            this.canvasAPI.fill()
+        }
     }
     newSheetGrid() {
         let fucky: Column[] = []
@@ -62,6 +79,6 @@ export class SheetManager {
         const cells = this.getCells()
         const cell = cells.find(cell => pos.x < cell.x + cell.width && pos.y < cell.y + cell.height)
         console.log(cell)
-        if (cell) cell.select(true)
+        if (cell) cell.onClick()
     }
 }

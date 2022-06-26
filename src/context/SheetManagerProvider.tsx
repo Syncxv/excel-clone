@@ -6,12 +6,13 @@ export interface ISheetManagerContext {
     sheetManager: SheetManager | null
 }
 
+export const sheetManager = new SheetManager()
 export const SheetManagerContext = createContext<ISheetManagerContext>({ sheetManager: null })
 
 export const SheetManagerProvider: FunctionalComponent = ({ children }) => {
     const [val, setManager] = useState<ISheetManagerContext>({ sheetManager: null })
     useEffect(() => {
-        setManager({ sheetManager: new SheetManager() })
+        setManager({ sheetManager })
         console.log('SET SHEET MANAGER')
     }, [])
     console.log(val)

@@ -1,3 +1,6 @@
+import { sheetManager } from '../context/SheetManagerProvider'
+import { CanvasAPI } from './CanvasAPI'
+
 const letterMap: { [key: string]: number } = {
     A: 0,
     B: 1,
@@ -26,41 +29,42 @@ const letterMap: { [key: string]: number } = {
     Y: 24,
     Z: 25
 }
-
+export interface ISelected {
+    isPrimary: boolean
+    isSelected: boolean
+}
 export class CellClass {
     columnLetter: string
     rowIndex: number
-    selected: { isPrimary: boolean; isSelected: boolean }
+    selected: ISelected
     height: number
     ctx: CanvasRenderingContext2D
     width: number
     x: number
     y: number
+    boxBottomOffset: number
+    strokeWidth: number
     constructor(columnLetter: string, rowIndex: number, ctx: CanvasRenderingContext2D) {
         this.columnLetter = columnLetter
         this.rowIndex = rowIndex
         this.ctx = ctx
         this.selected = { isPrimary: false, isSelected: false }
         this.height = 20
-        this.width = 60
-        this.x = letterMap[this.columnLetter] * this.width
-        this.y = this.rowIndex * this.height
+        this.width = 80
+        this.strokeWidth = 1.01
+        this.boxBottomOffset = 5
+        this.x = letterMap[this.columnLetter] * (this.width + this.strokeWidth) + 1
+        this.y = this.rowIndex * (this.height + this.strokeWidth) + 1
         this.onClick = this.onClick.bind(this)
         this.initalize()
     }
 
     async initalize() {}
 
-    draw() {
+    draw({ drawCell }: CanvasAPI) {
         const { ctx } = this
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
-        ctx.beginPath()
-        if (this.selected.isPrimary) {
-            ctx.strokeStyle = 'blue'
-            ctx.lineWidth = 2
-        } else ctx.strokeStyle = 'black'
-        ctx.rect(this.x, this.y, this.width, this.height)
-        ctx.stroke()
+        ctx.fillStyle = 'white'
+        drawCell(this.x, this.y, this.width, this.height, this.selected)
     }
 
     onClick() {
@@ -76,9 +80,9 @@ export class CellClass {
     }
 }
 
-export const unSelectAll = () => {}
-// sheetManager.grid
-//     .map(s => s.cells)
-//     .flat()
-//     .filter(s => s.selected.isSelected)
-//     .forEach(s => s.unSelect())
+export const unSelectAll = () =>
+    sheetManager.grid
+        .map(s => s.cells)
+        .flat()
+        .filter(s => s.selected.isSelected)
+        .forEach(s => s.unSelect())
